@@ -1,7 +1,7 @@
 resource "aws_instance" "My-ec2-1" {
   ami             = "ami-0dee22c13ea7a9a67"
   instance_type   = "t2.medium"
-  key_name        = aws_key_pair.new-tf-key.key_name 
+  key_name        = aws_key_pair.new-tf-key.key_name
   user_data       = file("kind.sh")
   security_groups = ["tf-security-group"]
   root_block_device {
