@@ -7,6 +7,12 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      run_destroy:
+        description: 'Run Terraform Destroy? (yes/no)'
+        required: true
+        default: 'no'
 
 env:
   TF_VERSION: 1.11.3
@@ -17,6 +23,7 @@ env:
 jobs:
   terraform:
     name: Terraform Plan & Apply
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.run_destroy != 'yes'
     runs-on: ubuntu-latest
 
     steps:
@@ -44,3 +51,24 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve tfplan
+
+  destroy:
+    name: Terraform Destroy (Manual)
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_destroy == 'yes'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+
