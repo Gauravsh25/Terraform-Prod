@@ -12,6 +12,7 @@ resource "aws_instance" "My-ec2-1" {
   tags = {
     Name = "Web-Server"
     Team = "Real Device"
+    DC   = "UL"
   }
 }
 
