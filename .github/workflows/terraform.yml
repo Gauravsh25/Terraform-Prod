@@ -9,10 +9,21 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      run_destroy:
-        description: 'Run Terraform Destroy? (yes/no)'
+       action:
+        description: 'Action to Perform'
         required: true
-        default: 'no'
+        type: choice
+        options:
+        - plan
+        - apply
+        - refresh
+        - import
+       product:
+        description: 'Product Name to Deploy'
+        required: true
+        type: choice
+        options:
+        - Test
 
 env:
   TF_VERSION: 1.11.3
@@ -71,4 +82,3 @@ jobs:
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
-
