@@ -32,3 +32,4 @@ resource "aws_instance" "My-Ubuntu-Server" {
   }
 
 }
+*/
